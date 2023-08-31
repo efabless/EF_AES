@@ -88,7 +88,7 @@ module SW_AES_AHBL (
 	wire		read_data	= CTRL_REG[1:1];
 	wire		encdec	= CTRL_REG[2:2];
 	wire		keylen	= CTRL_REG[3:3];
-	wire		ready;
+	wire		ready, result_valid;
 	wire[7:0]	STATUS_REG	= {6'b0, ready, result_valid};
 	wire[255:0] key;
 	assign	key[31:0]	= KEY0_REG[31:0];
