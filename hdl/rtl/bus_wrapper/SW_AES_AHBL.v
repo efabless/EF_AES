@@ -105,10 +105,10 @@ module SW_AES_AHBL (
 	assign	block[95:64]	= BLOCK2_REG[31:0];
 	assign	block[127:96]	= BLOCK3_REG[31:0];
 	wire[127:0] result;
-	assign	RESULT0_REG	= result[31:0];
-	assign	RESULT1_REG	= result[63:32];
-	assign	RESULT2_REG	= result[95:64];
-	assign	RESULT3_REG	= result[127:96];
+	wire[31:0]	RESULT0_REG	= result[31:0];
+	wire[31:0]	RESULT1_REG	= result[63:32];
+	wire[31:0]	RESULT2_REG	= result[95:64];
+	wire[31:0]	RESULT3_REG	= result[127:96];
 	wire		result_valid;
 	wire		_VALID_FLAG_	= result_valid;
 	wire		ready;
