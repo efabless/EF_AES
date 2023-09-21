@@ -5,13 +5,15 @@
         "repo": "github.com/efabless/SW_AES",
         "owner": "secworks",
         "license": "",
-        "author": "secworks",
+        "author": "Joachim Strombergson",
         "email": "",
-        "version": "",
-        "date": "",
-        "category": "1",
+        "version": "v1.0.0",
+        "date": "30-8-2023",
+        "category": "digital",
         "tags": [
-            "accelerator"
+            "accelerator",
+            "AES",
+            "security"
         ],
         "bus": [
             "generic"
