@@ -4,7 +4,7 @@
         "description": "Verilog implementation of the symmetric block cipher AES (Advanced Encryption Standard) as specified in NIST FIPS 197. This implementation supports 128 and 256 bit keys.",
         "repo": "github.com/efabless/SW_AES",
         "owner": "secworks",
-        "license": "",
+        "license": "MIT",
         "author": "Joachim Strombergson",
         "email": "",
         "version": "v1.0.0",
