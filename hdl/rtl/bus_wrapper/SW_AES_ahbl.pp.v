@@ -170,7 +170,7 @@ module SW_AES_ahbl (
 	always @(posedge HCLK or negedge HRESETn) if(~HRESETn) BLOCK3_REG <= 0; else if(ahbl_we & (last_HADDR[15:0]==BLOCK3_REG_ADDR)) BLOCK3_REG <= HWDATA[32-1:0];
 	always @(posedge HCLK or negedge HRESETn) if(~HRESETn) IM_REG <= 0; else if(ahbl_we & (last_HADDR[15:0]==IM_REG_ADDR)) IM_REG <= HWDATA[2-1:0];
 
-	always @(posedge HCLK or negedge HRESETn) if(~HRESETn) ICR_REG <= sz'b0; else if(ahbl_we & (last_HADDR[15:0]==ICR_REG_ADDR)) ICR_REG <= HWDATA[2-1:0]; else ICR_REG <= 2'd0;
+	always @(posedge HCLK or negedge HRESETn) if(~HRESETn) ICR_REG <= 2'b0; else if(ahbl_we & (last_HADDR[15:0]==ICR_REG_ADDR)) ICR_REG <= HWDATA[2-1:0]; else ICR_REG <= 2'd0;
 
 	always @(posedge HCLK or negedge HRESETn)
 		if(~HRESETn) RIS_REG <= 32'd0;
