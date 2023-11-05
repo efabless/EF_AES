@@ -31,6 +31,26 @@
     },
     "regs": [
         {
+            "name": "STATUS",
+            "size": "8",
+            "mode": "ro",
+            "init": "0",
+            "fields": [
+                {
+                    "name": "ready_reg",
+                    "from": "7",
+                    "size": "1",
+                    "port": "ready"
+                },
+                {
+                    "name": "valid_reg",
+                    "from": "8",
+                    "size": "1",
+                    "port": "result_valid"
+                }
+            ]
+        },
+        {
             "name": "CTRL",
             "size": "8",
             "mode": "rw",
@@ -59,26 +79,6 @@
                     "from": "3",
                     "size": "1",
                     "port": "keylen"
-                }
-            ]
-        },
-        {
-            "name": "STATUS",
-            "size": "8",
-            "mode": "ro",
-            "init": "0",
-            "fields": [
-                {
-                    "name": "ready_reg",
-                    "from": "0",
-                    "size": "1",
-                    "port": "ready"
-                },
-                {
-                    "name": "valid_reg",
-                    "from": "1",
-                    "size": "1",
-                    "port": "result_valid"
                 }
             ]
         },
