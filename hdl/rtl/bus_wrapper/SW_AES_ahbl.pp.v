@@ -34,7 +34,7 @@
 
 
 
-module SW_AES_ahbl (
+module SW_AES_AHBL (
 	input	wire 		HCLK,
 	input	wire 		HRESETn,
 	input	wire [31:0]	HADDR,
