@@ -1,5 +1,5 @@
-#ifndef SW_AES
-#define SW_AES
+#ifndef SW_AES_H
+#define SW_AES_H
 
 #include <stdint.h>
 #include <stdbool.h>
