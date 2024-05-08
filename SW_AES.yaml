@@ -1,0 +1,267 @@
+---
+info:
+  name: SW_AES
+  description: Verilog implementation of the symmetric block cipher AES (Advanced
+    Encryption Standard) as specified in NIST FIPS 197. This implementation supports
+    128 and 256 bit keys.
+  repo: github.com/efabless/SW_AES
+  owner: secworks
+  license: MIT
+  author: Joachim Strombergson
+  email: ''
+  version: v1.0.1
+  date: 08-5-2024
+  category: digital
+  tags:
+  - accelerator
+  - AES
+  - security
+  bus:
+  - generic
+  type: soft
+  status: verified
+  cell_count:
+    - IP: TBD
+    - APB: TBD
+    - AHBL: TBD
+    - WB: TBD
+  width: '0.0'
+  height: '0.0'
+  technology: n/a
+  clock_freq_mhz:
+    - IP: TBD
+    - APB: TBD
+    - AHBL: TBD
+    - WB: TBD
+  digital_supply_voltage: n/a
+  analog_supply_voltage: n/a
+  irq_reg_offset: 0xFF00
+  fifo_reg_offset: 0xFE00
+
+ports:
+- name: encdec
+  width: 1
+  direction: input
+  description: Encipher/Decipher control
+- name: init
+  width: 1
+  direction: input
+  description: Initial bit
+- name: next
+  width: 1
+  direction: input
+  description: Next bit
+- name: ready
+  width: 1
+  direction: input
+  description: ready to start
+- name: key
+  width: 256
+  direction: input
+  description: key value
+- name: keylen
+  width: 1
+  direction: input
+  description: key length 128 or 256
+- name: block
+  width: 128
+  direction: input
+  description: block value 
+- name: result
+  width: 128
+  direction: output
+  description: result value 
+- name: result_valid
+  width: 1
+  direction: output
+  description: result is valid 
+
+registers:
+- name: STATUS
+  size: 8
+  mode: r
+  fifo: no
+  offset: 0
+  bit_access: no
+  description: "Status register bit 6: ready , bit 7: valid"
+  fields:
+    - name: ready_reg
+      bit_offset: 6
+      bit_width: 1
+      read_port: ready
+      description: Ready to start
+    - name: valid_reg
+      bit_offset: 7
+      bit_width: 1
+      read_port: result_valid
+      description: Result is valid
+- name: CTRL
+  size: 8
+  mode: w
+  fifo: no
+  offset: 4
+  bit_access: no
+  description: "Control register bit 0: Initial bit (init), bit 1: Next bit , bit 2: Encipher/Decipher control, bit 3: Key length control"
+  fields:
+    - name: init_reg
+      bit_offset: 0
+      bit_width: 1
+      write_port: init
+      description: Initial bit
+    - name: next_reg
+      bit_offset: 1
+      bit_width: 1
+      write_port: read_data
+      description: Next bit
+    - name: encdec_reg
+      bit_offset: 2
+      bit_width: 1
+      write_port: encdec
+      description: Encipher/Decipher control (“0” means Decipher “1” means Encipher)
+    - name: keylen_reg
+      bit_offset: 3
+      bit_width: 1
+      write_port: keylen
+      description: Key length control (“0” means 128 bit key length “1” means 256 bit key length")
+- name: KEY0
+  size: 32
+  mode: w
+  fifo: no
+  offset: 8
+  bit_access: no
+  write_port: key[31:0]
+  description: Contains the bits 31-0 of the input key value
+- name: KEY1
+  size: 32
+  mode: w
+  fifo: no
+  offset: 12
+  bit_access: no
+  write_port: key[63:32]
+  description: Contains the bits 63-32 of the input key value
+- name: KEY2
+  size: 32
+  mode: w
+  fifo: no
+  offset: 16
+  bit_access: no
+  write_port: key[95:64]
+  description: Contains the bits 95-64 of the input key value
+- name: KEY3
+  size: 32
+  mode: w
+  fifo: no
+  offset: 20
+  bit_access: no
+  write_port: key[127:96]
+  description: Contains the bits 127-96 of the input key value
+- name: KEY4
+  size: 32
+  mode: w
+  fifo: no
+  offset: 24
+  bit_access: no
+  write_port: key[159:128]
+  description: Contains the bits 159-128 of the input key value
+- name: KEY5
+  size: 32
+  mode: w
+  fifo: no
+  offset: 28
+  bit_access: no
+  write_port: key[191:160]
+  description: Contains the bits 191-160 of the input key value
+- name: KEY6
+  size: 32
+  mode: w
+  fifo: no
+  offset: 32
+  bit_access: no
+  write_port: key[223:192]
+  description: Contains the bits 223-192 of the input key value
+- name: KEY7
+  size: 32
+  mode: w
+  fifo: no
+  offset: 36
+  bit_access: no
+  write_port: key[255:224]
+  description: Contains the bits 255-224 of the input key value
+- name: BLOCK0
+  size: 32
+  mode: w
+  fifo: no
+  offset: 40
+  bit_access: no
+  write_port: block[31:0]
+  description: Contains the bits 31-0 of the input block value
+- name: BLOCK1
+  size: 32
+  mode: w
+  fifo: no
+  offset: 44
+  bit_access: no
+  write_port: block[63:32]
+  description: Contains the bits 63-32 of the input block value
+- name: BLOCK2
+  size: 32
+  mode: w
+  fifo: no
+  offset: 48
+  bit_access: no
+  write_port: block[95:64]
+  description: Contains the bits 95-64 of the input block value
+- name: BLOCK3
+  size: 32
+  mode: w
+  fifo: no
+  offset: 52
+  bit_access: no
+  write_port: block[127:96]
+  description: Contains the bits 127-96 of the input block value
+- name: RESULT0
+  size: 32
+  mode: w
+  fifo: no
+  offset: 56
+  bit_access: no
+  write_port: result[31:0]
+  description: Contains the bits 31-0 of the input result value
+- name: RESULT1
+  size: 32
+  mode: w
+  fifo: no
+  offset: 60
+  bit_access: no
+  write_port: result[63:32]
+  description: Contains the bits 63-32 of the input result value
+- name: RESULT2
+  size: 32
+  mode: w
+  fifo: no
+  offset: 64
+  bit_access: no
+  write_port: result[95:64]
+  description: Contains the bits 95-64 of the input result value
+- name: RESULT3
+  size: 32
+  mode: w
+  fifo: no
+  offset: 68
+  bit_access: no
+  write_port: result[127:96]
+  description: Contains the bits 127-96 of the input result value
+
+clock:
+  name: clk
+reset:
+  name: reset_n
+  level: 0
+
+flags:
+- name: valid
+  port: result_valid
+  description: Result is valid
+- name: ready
+  port: ready
+  description: Ready to start
