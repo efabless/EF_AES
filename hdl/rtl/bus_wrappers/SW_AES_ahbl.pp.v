@@ -34,7 +34,7 @@
 
 
 
-module SW_AES_AHBL (
+module SW_AES_AHBL #(parameter CLKG=1)(
 	input	wire 		HCLK,
 	input	wire 		HRESETn,
 	input	wire [31:0]	HADDR,
@@ -70,6 +70,7 @@ module SW_AES_AHBL (
 	localparam[15:0] RIS_REG_ADDR = 16'h0f04;
 	localparam[15:0] IM_REG_ADDR = 16'h0f08;
 	localparam[15:0] MIS_REG_ADDR = 16'h0f0c;
+	localparam[15:0] CLKG_REG_ADDR = 16'hF000;
 
 	reg             last_HSEL;
 	reg [31:0]      last_HADDR;
@@ -138,11 +139,24 @@ module SW_AES_AHBL (
 	wire		ahbl_valid	= last_HSEL & last_HTRANS[1];
 	wire		ahbl_we	= last_HWRITE & ahbl_valid;
 	wire		ahbl_re	= ~last_HWRITE & ahbl_valid;
-	wire		_clk_	= HCLK;
+	// wire		_clk_	= HCLK;
 	wire		_rst_	= ~HRESETn;
+	wire			 gclk;
+	generate
+        if(CLKG == 1) begin
+			reg         CLKG_REG;
+            always @(posedge HCLK or negedge HRESETn) if(~HRESETn) CLKG_REG <= 0; else if(ahbl_we & (last_HADDR[15:0]==CLKG_REG_ADDR)) CLKG_REG <= HWDATA[1-1:0];
+			ef_gating_cell clk_gate_cell(
+				   .clk(HCLK),
+				   .clk_en(CLKG_REG),
+				   .clk_o(gclk)
+			   );
+        end else
+            assign gclk   = HCLK;
+    endgenerate
 
 	aes_core inst_to_wrap (
-		.clk(_clk_),
+		.clk(gclk),
 		.reset_n(~_rst_),
 		.encdec(encdec),
 		.init(init),
