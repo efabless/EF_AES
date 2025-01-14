@@ -1,14 +1,12 @@
 ---
 info:
-  name: SW_AES
-  description: Verilog implementation of the symmetric block cipher AES (Advanced
-    Encryption Standard) as specified in NIST FIPS 197. This implementation supports
-    128 and 256 bit keys.
-  repo: github.com/efabless/SW_AES
-  owner: secworks
-  license: MIT
-  author: Joachim Strombergson
-  email: ''
+  name: EF_AES
+  description: APB, AHBL and wishbone wrappers for the symmetric block cipher AES (Advanced Encryption Standard) which is implemented in Verilog in the [secworks/aes](https://github.com/secworks/aes/tree/master) repository.
+  repo: github.com/efabless/EF_AES
+  owner: Efabless Corp.
+  license: Apache 2.0
+  author: Efabless Corp.
+  email: ip_admin@efabless.com
   version: v1.0.2
   date: 12-11-2024
   category: digital
@@ -254,6 +252,7 @@ registers:
 
 clock:
   name: clk
+  gated: "yes"
 reset:
   name: reset_n
   level: 0
