@@ -6,7 +6,7 @@ APB, AHBL and wishbone wrappers for the symmetric block cipher AES (Advanced Enc
 
  APB, AHBL, and Wishbone wrappers are provided. All wrappers provide the same programmer's interface as outlined in the following sections.
 
-#### Wrapped IP System Integration
+### Wrapped IP System Integration
 
 Based on your use case, use one of the provided wrappers or create a wrapper for your system bus type. For an example of how to integrate the wishbone wrapper:
 ```verilog
@@ -24,12 +24,14 @@ EF_AES_WB INST (
 	.IRQ(irq),
 );
 ```
-#### Wrappers with DFT support
+### Wrappers with DFT support
 Wrappers in the directory ``/hdl/rtl/bus_wrappers/DFT`` have an extra input port ``sc_testmode`` to disable the clock gate whenever the scan chain testmode is enabled.
+### Interrupt Request Line (irq)
+This IP generates interrupts on specific events, which are described in the [Interrupt Flags](#interrupt-flags) section bellow. The IRQ port should be connected to the system interrupt controller.
 
 ## Implementation example  
 
-The following table is the result for implementing the EF_AES IP with different wrappers using Sky130 PDK and [OpenLane2](https://github.com/efabless/openlane2) flow.
+The following table is the result for implementing the EF_AES IP with different wrappers using Sky130 HD library and [OpenLane2](https://github.com/efabless/openlane2) flow.
 |Module | Number of cells | Max. freq |
 |---|---|---|
 |EF_AES|TBD| TBD |
@@ -184,13 +186,13 @@ Contains the bits 127-96 of the input result value
 The wrapped IP provides four registers to deal with interrupts: IM, RIS, MIS and IC. These registers exist for all wrapper types.
 
 Each register has a group of bits for the interrupt sources/flags.
-- `IM` [offset: 0xff00]: is used to enable/disable interrupt sources.
+- `IM` [offset: ``0xff00``]: is used to enable/disable interrupt sources.
 
-- `RIS` [offset: 0xff08]: has the current interrupt status (interrupt flags) whether they are enabled or disabled.
+- `RIS` [offset: ``0xff08``]: has the current interrupt status (interrupt flags) whether they are enabled or disabled.
 
-- `MIS` [offset: 0xff04]: is the result of masking (ANDing) RIS by IM.
+- `MIS` [offset: ``0xff04``]: is the result of masking (ANDing) RIS by IM.
 
-- `IC` [offset: 0xff0c]: is used to clear an interrupt flag.
+- `IC` [offset: ``0xff0c``]: is used to clear an interrupt flag.
 
 
 The following are the bit definitions for the interrupt registers:
@@ -207,8 +209,24 @@ The IP includes a clock gating feature that allows selective activation and deac
 VERILOG_DEFINES:
 - CLKG_SKY130_HD
 ```
+## Firmware Drivers:
+Firmware drivers for EF_AES can be found in the [EF_AES](https://github.com/efabless/EF_APIs_HUB/tree/main/EF_AES) directory in the [EF_APIs_HUB](https://github.com/efabless/EF_APIs_HUB) repo. EF_AES driver documentation  is available [here](https://github.com/efabless/EF_APIs_HUB/tree/main/EF_AES/README.md).
+You can also find an example C application using the EF_AES drivers [here](https://github.com/efabless/EF_APIs_HUB/tree/main/EF_AES/EF_AES_example.c).
+## Installation:
+You can install the IP either by cloning this repository or by using [IPM](https://github.com/efabless/IPM).
+### 1. Using [IPM](https://github.com/efabless/IPM):
+- [Optional] If you do not have IPM installed, follow the installation guide [here](https://github.com/efabless/IPM/blob/main/README.md)
+- After installing IPM, execute the following command ```ipm install EF_AES```.
+> **Note:** This method is recommended as it automatically installs [EF_IP_UTIL](https://github.com/efabless/EF_IP_UTIL.git) as a dependency.
+### 2. Cloning this repo: 
+- Clone [EF_IP_UTIL](https://github.com/efabless/EF_IP_UTIL.git) repository, which includes the required modules from the common modules library, [ef_util_lib.v](https://github.com/efabless/EF_IP_UTIL/blob/main/hdl/ef_util_lib.v).
+```git clone https://github.com/efabless/EF_IP_UTIL.git```
+- Clone the IP repository
+```git clone github.com/efabless/EF_AES```
 
-### The Interface 
+### The Wrapped IP Interface 
+
+>**_NOTE:_** This section is intended for advanced users who wish to gain more information about the interface of the wrapped IP, in case they want to create their own wrappers.
 
 <img src="docs/_static/EF_AES.svg" width="600"/>
 
@@ -225,17 +243,3 @@ VERILOG_DEFINES:
 |block|input|128|block value|
 |result|output|128|result value|
 |result_valid|output|1|result is valid|
-## Firmware Drivers:
-Firmware drivers for EF_AES can be found in the [fw](https://github.com/efabless/EF_AES/tree/main/fw) directory. EF_AES driver documentation  is available [here](https://github.com/efabless/EF_AES/blob/main/fw/README.md).
-You can also find an example C application using the EF_AES drivers [here]().
-## Installation:
-You can install the IP either by cloning this repository or by using [IPM](https://github.com/efabless/IPM).
-##### 1. Using [IPM](https://github.com/efabless/IPM):
-- [Optional] If you do not have IPM installed, follow the installation guide [here](https://github.com/efabless/IPM/blob/main/README.md)
-- After installing IPM, execute the following command ```ipm install EF_AES```.
-> **Note:** This method is recommended as it automatically installs [EF_IP_UTIL](https://github.com/efabless/EF_IP_UTIL.git) as a dependency.
-##### 2. Cloning this repo: 
-- Clone [EF_IP_UTIL](https://github.com/efabless/EF_IP_UTIL.git) repository, which includes the required modules from the common modules library, [ef_util_lib.v](https://github.com/efabless/EF_IP_UTIL/blob/main/hdl/ef_util_lib.v).
-```git clone https://github.com/efabless/EF_IP_UTIL.git```
-- Clone the IP repository
-```git clone github.com/efabless/EF_AES```
