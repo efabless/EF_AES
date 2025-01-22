@@ -26,7 +26,14 @@ Directory Structure:
 
     - hdl 
         - rtl 
-            - **EF_AES.v**: Verilog source code for the EF_AES design, including the core logic of the UART module.
+            - **aes_core.v**: Verilog source code for the EF_AES design
+            - **aes_decipher_block.v**: Verilog source code for the EF_AES design
+            - **aes_encipher_block.v**: Verilog source code for the EF_AES design
+            - **aes_inv_sbox.v**: Verilog source code for the EF_AES design
+            - **aes_key_mem.v**: Verilog source code for the EF_AES design
+            - **aes_sbox.v**: Verilog source code for the EF_AES design
+            - **aes.v**: Verilog source code for the EF_AES design
+
             - **bus_wrappers**
                 - **EF_AES_AHBL.v**: Verilog wrapper to interface the EF_AES with the AMBA High-performance Bus (AHB-Lite) protocol.
                 - **EF_AES_APB.v**: Verilog wrapper to interface the EF_AES with the Advanced Peripheral Bus (APB) protocol.
