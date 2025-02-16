@@ -1,5 +1,5 @@
 /*
-	Copyright 2024 Efabless Corp.
+	Copyright 2025 Efabless Corp.
 
 	Author: Efabless Corp. (ip_admin@efabless.com)
 
@@ -94,7 +94,7 @@ module EF_AES_WB (
 
 	reg [7:0]	CTRL_REG;
 	assign	init	=	CTRL_REG[0 : 0];
-	assign	read_data	=	CTRL_REG[1 : 1];
+	assign	next	=	CTRL_REG[1 : 1];
 	assign	encdec	=	CTRL_REG[2 : 2];
 	assign	keylen	=	CTRL_REG[3 : 3];
 	`WB_REG(CTRL_REG, 0, 8)

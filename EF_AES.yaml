@@ -109,7 +109,7 @@ registers:
     - name: next_reg
       bit_offset: 1
       bit_width: 1
-      write_port: read_data
+      write_port: next
       description: Next bit
     - name: encdec_reg
       bit_offset: 2

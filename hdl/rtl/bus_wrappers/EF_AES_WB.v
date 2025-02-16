@@ -1,5 +1,5 @@
 /*
-	Copyright 2024 Efabless Corp.
+	Copyright 2025 Efabless Corp.
 
 	Author: Efabless Corp. (ip_admin@efabless.com)
 
@@ -96,8 +96,8 @@ module EF_AES_WB (
   assign STATUS_WIRE[7 : 7] = result_valid;
 
   reg [7:0] CTRL_REG;
-  assign init = CTRL_REG[0 : 0];
-  assign read_data = CTRL_REG[1 : 1];
+  assign init   = CTRL_REG[0 : 0];
+  assign next   = CTRL_REG[1 : 1];
   assign encdec = CTRL_REG[2 : 2];
   assign keylen = CTRL_REG[3 : 3];
   always @(posedge clk_i or posedge rst_i)

@@ -1,5 +1,5 @@
 /*
-	Copyright 2024 Efabless Corp.
+	Copyright 2025 Efabless Corp.
 
 	Author: Efabless Corp. (ip_admin@efabless.com)
 
@@ -78,8 +78,8 @@ module EF_AES_AHBL (
 	`AHBL_CTRL_SIGNALS
 
 	wire [1-1:0]	encdec;
-	wire [1-1:0]	init;
-	wire [1-1:0]	next;
+	reg [1-1:0]	init;
+	reg [1-1:0]	next;
 	wire [1-1:0]	ready;
 	wire [256-1:0]	key;
 	wire [1-1:0]	keylen;
@@ -93,8 +93,6 @@ module EF_AES_AHBL (
 	assign	STATUS_WIRE[7 : 7] = result_valid;
 
 	reg [7:0]	CTRL_REG;
-	assign	init	=	CTRL_REG[0 : 0];
-	assign	read_data	=	CTRL_REG[1 : 1];
 	assign	encdec	=	CTRL_REG[2 : 2];
 	assign	keylen	=	CTRL_REG[3 : 3];
 	`AHBL_REG(CTRL_REG, 0, 8)
@@ -188,6 +186,24 @@ module EF_AES_AHBL (
 	end
 
 	assign IRQ = |MIS_REG;
+
+
+	reg valid_ctrl_wr;
+
+	always @(posedge HCLK or negedge HRESETn) 
+		if (~HRESETn) begin
+			init <= 1'h0;  
+			next <= 1'h0; 
+			valid_ctrl_wr <= 1'b0; 
+		end else if (valid_ctrl_wr) begin
+			init <= CTRL_REG[0];  
+			next <= CTRL_REG[1];  
+			valid_ctrl_wr <= last_HADDR[15:0]==CTRL_REG_OFFSET & ahbl_we;
+		end else begin 
+			init <= 1'h0;
+			next <= 1'h0;
+			valid_ctrl_wr <= last_HADDR[15:0]==CTRL_REG_OFFSET & ahbl_we;
+		end
 
 	aes_core instance_to_wrap (
 		.clk(clk),
