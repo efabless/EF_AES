@@ -104,14 +104,14 @@ module EF_AES_AHBL #(parameter CLKG=1)(
 	reg	[31:0]	BLOCK1_REG;
 	reg	[31:0]	BLOCK2_REG;
 	reg	[31:0]	BLOCK3_REG;
-	reg	[1:0]	RIS_REG;
-	reg	[1:0]	ICR_REG;
-	reg	[1:0]	IM_REG;
+	reg	[2:0]	RIS_REG;
+	reg	[2:0]	ICR_REG;
+	reg	[2:0]	IM_REG;
 	reg		init;
 	reg		next;
 
-	wire		ready, result_valid;
-	wire[7:0]	STATUS_REG	= {6'b0, ready, result_valid};
+	wire		ready, result_valid, key_ready;
+	wire[2:0]	STATUS_REG	= {key_ready, ready, result_valid};
 	wire		encdec	= CTRL_REG[2:2];
 	wire		keylen	= CTRL_REG[3:3];
 	wire[255:0] key;
@@ -135,7 +135,8 @@ module EF_AES_AHBL #(parameter CLKG=1)(
 	wire[31:0]	RESULT3_REG	= result[127:96];
 	wire		_VALID_FLAG_	= result_valid;
 	wire		_READY_FLAG_	= ready;
-	wire[1:0]	MIS_REG	= RIS_REG & IM_REG;
+	wire        _KEY_READY_FLAG_ = key_ready;
+	wire[2:0]	MIS_REG	= RIS_REG & IM_REG;
 	wire		ahbl_valid	= last_HSEL & last_HTRANS[1];
 	wire		ahbl_we	= last_HWRITE & ahbl_valid;
 	wire		ahbl_re	= ~last_HWRITE & ahbl_valid;
@@ -166,7 +167,8 @@ module EF_AES_AHBL #(parameter CLKG=1)(
 		.keylen(keylen),
 		.block(block),
 		.result(result),
-		.result_valid(result_valid)
+		.result_valid(result_valid),
+		.key_ready(key_ready)
 	);
 
 	always @(posedge HCLK or negedge HRESETn) if(~HRESETn) CTRL_REG <= 0; else if(ahbl_we & (last_HADDR[15:0]==CTRL_REG_ADDR)) CTRL_REG <= HWDATA[8-1:0];
@@ -187,10 +189,11 @@ module EF_AES_AHBL #(parameter CLKG=1)(
 	always @(posedge HCLK or negedge HRESETn) if(~HRESETn) ICR_REG <= 2'b0; else if(ahbl_we & (last_HADDR[15:0]==ICR_REG_ADDR)) ICR_REG <= HWDATA[2-1:0]; else ICR_REG <= 2'd0;
 
 	always @(posedge HCLK or negedge HRESETn)
-		if(~HRESETn) RIS_REG <= 32'd0;
+		if(~HRESETn) RIS_REG <= 3'd0;
 		else begin
 			if(_VALID_FLAG_) RIS_REG[0] <= 1'b1; else if(ICR_REG[0]) RIS_REG[0] <= 1'b0;
 			if(_READY_FLAG_) RIS_REG[1] <= 1'b1; else if(ICR_REG[1]) RIS_REG[1] <= 1'b0;
+			if(_KEY_READY_FLAG_) RIS_REG[2] <= 1'b1; else if(ICR_REG[2]) RIS_REG[2] <= 1'b0;
 
 		end
 
