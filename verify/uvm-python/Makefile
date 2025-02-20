@@ -10,11 +10,26 @@ RTL_MACROS += "" # Add macros needed
 BUS_TYPE ?= APB
 ifeq ($(BUS_TYPE),APB)
     RTL_MACROS += -DBUS_TYPE_APB
+    DESIGN_NAME = EF_AES_APB
+    export CLK_MAKEFILE = PCLK
+    export RST_MAKEFILE = PRESETn
 else ifeq ($(BUS_TYPE),AHB)
     RTL_MACROS += -DBUS_TYPE_AHB
+    DESIGN_NAME = EF_AES_AHBL
+    export CLK_MAKEFILE = HCLK
+    export RST_MAKEFILE = HRESETn
 else ifeq ($(BUS_TYPE),WISHBONE)
     RTL_MACROS += -DBUS_TYPE_WISHBONE
+    DESIGN_NAME = EF_AES_WB
+    export CLK_MAKEFILE = clk_i
+    export RST_MAKEFILE = rst_i
 endif
+## netlist Gen 
+GL_MACROS += -DGL -DFUNCTIONAL  $(RTL_MACROS) -DUNIT_DELAY=\#1 
+PRE_SYS_FILES = $(AHB_FILES) $(APB_FILES) $(WB_FILES) $(HDL_FILES)
+PDK_DIR = $(HOME)/.volare/volare/sky130/versions/bdc9412b3e468c102d01b7cf6337be06ec6e9c9a/sky130A/
+PDK_FILES = $(PDK_DIR)/libs.ref/sky130_fd_sc_hd/verilog/primitives.v $(PDK_DIR)/libs.ref/sky130_fd_sc_hd/verilog/sky130_fd_sc_hd.v # get this from openlane logs in the future 
+
 # RTL_MACROS ?= "-DSKIP_WAVE_DUMP"
 YAML_FILE = $(PWD)/../../EF_AES.yaml # TODO: update yaml file path
 MAKEFLAGS += --no-print-directory
