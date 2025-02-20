@@ -76,25 +76,30 @@ ports:
 
 registers:
 - name: STATUS
-  size: 8
+  size: 3
   mode: r
   fifo: no
   offset: 0
   bit_access: no
-  description: "Status register bit 6: ready , bit 7: valid"
+  description: "Status register bit 0: valid, bit 1: ready, bit 2: key ready"
   fields:
-    - name: ready_reg
-      bit_offset: 6
-      bit_width: 1
-      read_port: ready
-      description: Ready to start
     - name: valid_reg
-      bit_offset: 7
+      bit_offset: 0
       bit_width: 1
       read_port: result_valid
       description: Result is valid
+    - name: ready_reg
+      bit_offset: 1
+      bit_width: 1
+      read_port: ready
+      description: Ready to start
+    - name: key_ready_reg
+      bit_offset: 2
+      bit_width: 1
+      read_port: key_ready
+      description: Key is ready
 - name: CTRL
-  size: 8
+  size: 4
   mode: w
   fifo: no
   offset: 4
@@ -264,3 +269,6 @@ flags:
 - name: ready
   port: ready
   description: Ready to start
+- name: key_ready
+  port: key_ready
+  description: Key is ready
