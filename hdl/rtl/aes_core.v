@@ -53,7 +53,8 @@ module aes_core(
 
                 input wire [127 : 0]  block,
                 output wire [127 : 0] result,
-                output wire           result_valid
+                output wire           result_valid,
+                output wire           key_ready
                );
 
 
@@ -89,7 +90,6 @@ module aes_core(
   reg            init_state;
 
   wire [127 : 0] round_key;
-  wire           key_ready;
 
   reg            enc_next;
   wire [3 : 0]   enc_round_nr;
