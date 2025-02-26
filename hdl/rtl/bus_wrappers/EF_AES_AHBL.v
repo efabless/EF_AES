@@ -66,11 +66,11 @@ module EF_AES_AHBL #(parameter CLKG=1)(
 	localparam[15:0] RESULT1_REG_ADDR = 16'h003c;
 	localparam[15:0] RESULT2_REG_ADDR = 16'h0040;
 	localparam[15:0] RESULT3_REG_ADDR = 16'h0044;
-	localparam[15:0] ICR_REG_ADDR = 16'hFF0C;
-	localparam[15:0] RIS_REG_ADDR = 16'hFF08;
 	localparam[15:0] IM_REG_ADDR = 16'hFF00;
 	localparam[15:0] MIS_REG_ADDR = 16'hFF04;
-	localparam[15:0] CLKG_REG_ADDR = 16'hF000;
+	localparam[15:0] RIS_REG_ADDR = 16'hFF08;
+	localparam[15:0] IC_REG_ADDR = 16'hFF0C;
+	localparam[15:0] CLKG_REG_ADDR = 16'hFF10;
 
 	reg             last_HSEL;
 	reg [31:0]      last_HADDR;
@@ -105,7 +105,7 @@ module EF_AES_AHBL #(parameter CLKG=1)(
 	reg	[31:0]	BLOCK2_REG;
 	reg	[31:0]	BLOCK3_REG;
 	reg	[2:0]	RIS_REG;
-	reg	[2:0]	ICR_REG;
+	reg	[2:0]	IC_REG;
 	reg	[2:0]	IM_REG;
 	reg		init;
 	reg		next;
@@ -186,14 +186,14 @@ module EF_AES_AHBL #(parameter CLKG=1)(
 	always @(posedge HCLK or negedge HRESETn) if(~HRESETn) BLOCK3_REG <= 0; else if(ahbl_we & (last_HADDR[15:0]==BLOCK3_REG_ADDR)) BLOCK3_REG <= HWDATA[32-1:0];
 	always @(posedge HCLK or negedge HRESETn) if(~HRESETn) IM_REG <= 0; else if(ahbl_we & (last_HADDR[15:0]==IM_REG_ADDR)) IM_REG <= HWDATA[2-1:0];
 
-	always @(posedge HCLK or negedge HRESETn) if(~HRESETn) ICR_REG <= 2'b0; else if(ahbl_we & (last_HADDR[15:0]==ICR_REG_ADDR)) ICR_REG <= HWDATA[2-1:0]; else ICR_REG <= 2'd0;
+	always @(posedge HCLK or negedge HRESETn) if(~HRESETn) IC_REG <= 2'b0; else if(ahbl_we & (last_HADDR[15:0]==IC_REG_ADDR)) IC_REG <= HWDATA[2-1:0]; else IC_REG <= 2'd0;
 
 	always @(posedge HCLK or negedge HRESETn)
 		if(~HRESETn) RIS_REG <= 3'd0;
 		else begin
-			if(_VALID_FLAG_) RIS_REG[0] <= 1'b1; else if(ICR_REG[0]) RIS_REG[0] <= 1'b0;
-			if(_READY_FLAG_) RIS_REG[1] <= 1'b1; else if(ICR_REG[1]) RIS_REG[1] <= 1'b0;
-			if(_KEY_READY_FLAG_) RIS_REG[2] <= 1'b1; else if(ICR_REG[2]) RIS_REG[2] <= 1'b0;
+			if(_VALID_FLAG_) RIS_REG[0] <= 1'b1; else if(IC_REG[0]) RIS_REG[0] <= 1'b0;
+			if(_READY_FLAG_) RIS_REG[1] <= 1'b1; else if(IC_REG[1]) RIS_REG[1] <= 1'b0;
+			if(_KEY_READY_FLAG_) RIS_REG[2] <= 1'b1; else if(IC_REG[2]) RIS_REG[2] <= 1'b0;
 
 		end
 
@@ -230,7 +230,7 @@ module EF_AES_AHBL #(parameter CLKG=1)(
 			(last_HADDR[15:0] == BLOCK2_REG_ADDR) ? BLOCK2_REG :
 			(last_HADDR[15:0] == BLOCK3_REG_ADDR) ? BLOCK3_REG :
 			(last_HADDR[15:0] == RIS_REG_ADDR) ? RIS_REG :
-			(last_HADDR[15:0] == ICR_REG_ADDR) ? ICR_REG :
+			(last_HADDR[15:0] == IC_REG_ADDR) ? IC_REG :
 			(last_HADDR[15:0] == IM_REG_ADDR) ? IM_REG :
 			(last_HADDR[15:0] == STATUS_REG_ADDR) ? STATUS_REG :
 			(last_HADDR[15:0] == RESULT0_REG_ADDR) ? RESULT0_REG :
